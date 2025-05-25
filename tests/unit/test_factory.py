@@ -46,6 +46,7 @@ class TestDetectorFactory:
             assert detector_config.name, "Detector name should not be empty"
             assert detector_config.class_path, "Class path should not be empty"
             assert detector_config.description, "Description should not be empty"
+            assert detector_config.output_type, "Output type should not be empty"
             assert (
                 "." in detector_config.class_path
             ), "Class path should contain module path"
@@ -166,6 +167,7 @@ class TestDetectorFactory:
             assert config.name == detector_name
             assert config.class_path == detector_config["class_path"]
             assert config.description == detector_config["description"]
+            assert config.output_type == detector_config["output_type"]
 
     def test_get_unknown_detector_config_raises_error(self):
         """Test that getting unknown detector config raises ConfigError."""
@@ -213,6 +215,7 @@ class TestDetectorFactory:
                     "name": "invalid_detector",
                     "class_path": "nonexistent.module.Class",
                     "description": "Invalid detector",
+                    "output_type": "docType",
                 }
             ]
         }
@@ -232,6 +235,7 @@ class TestDetectorFactory:
                     "name": "invalid_detector",
                     "class_path": "builtins.str",  # str is not a DetectorStrategy
                     "description": "Invalid detector",
+                    "output_type": "docType",
                 }
             ]
         }
@@ -251,6 +255,7 @@ class TestDetectorFactory:
                     "name": "invalid_detector",
                     "class_path": "invalid_path_without_dots",
                     "description": "Invalid detector",
+                    "output_type": "docType",
                 }
             ]
         }
@@ -270,6 +275,7 @@ class TestDetectorFactory:
                     "name": "test_detector",
                     "class_path": "classifier_router.detector.lease_header.LeaseHeaderDetector",
                     "description": "Test detector",
+                    "output_type": "docType",
                 }
             ]
         }

@@ -214,7 +214,7 @@ class ClassifierRouter(ClassifierLoggerMixin):
             detector_name: Name of the detector
 
         Returns:
-            Dictionary with detector information (name, class_path, description)
+            Dictionary with detector information (name, class_path, description, output_type)
 
         Raises:
             ClassifierError: If detector name is not found
@@ -225,11 +225,16 @@ class ClassifierRouter(ClassifierLoggerMixin):
                 "name": config.name,
                 "class_path": config.class_path,
                 "description": config.description,
+                "output_type": config.output_type,
             }
 
             self.logger.debug(
                 "Retrieved detector info",
-                extra={"detector": detector_name, "class_path": config.class_path},
+                extra={
+                    "detector": detector_name,
+                    "class_path": config.class_path,
+                    "output_type": config.output_type,
+                },
             )
 
             return info
@@ -244,3 +249,26 @@ class ClassifierRouter(ClassifierLoggerMixin):
                 },
             )
             raise ClassifierError(f"Failed to get detector info: {e}")
+
+    def get_output_type_mapping(self) -> Dict[str, str]:
+        """Get mapping of detector names to their output types.
+
+        Returns:
+            Dictionary mapping detector names to their output_type values
+
+        Example:
+            {
+                "lease_header_detector": "docType",
+                "jurisdiction_detector": "jurisdiction"
+            }
+        """
+        mapping = {}
+        for config in self.factory.list_available_detectors():
+            mapping[config.name] = config.output_type
+
+        self.logger.debug(
+            "Retrieved output type mapping",
+            extra={"mapping": mapping, "detector_count": len(mapping)},
+        )
+
+        return mapping

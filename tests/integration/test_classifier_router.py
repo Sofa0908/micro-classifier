@@ -169,12 +169,32 @@ class TestClassifierRouter:
         assert "name" in info
         assert "class_path" in info
         assert "description" in info
+        assert "output_type" in info
         assert info["name"] == detector_name
 
     def test_get_detector_info_invalid(self, router):
         """Test get_detector_info with invalid detector name."""
         with pytest.raises(ClassifierError, match="Failed to get detector info"):
             router.get_detector_info("nonexistent_detector")
+
+    def test_get_output_type_mapping(self, router, expected_detectors):
+        """Test get_output_type_mapping method."""
+        mapping = router.get_output_type_mapping()
+
+        assert isinstance(mapping, dict)
+        assert len(mapping) == len(expected_detectors)
+
+        # Verify all expected detectors are in the mapping
+        for detector_name in expected_detectors:
+            assert detector_name in mapping
+            assert isinstance(mapping[detector_name], str)
+            assert len(mapping[detector_name]) > 0  # output_type should not be empty
+
+        # Verify specific known mappings from our config
+        if "lease_header_detector" in mapping:
+            assert mapping["lease_header_detector"] == "docType"
+        if "jurisdiction_detector" in mapping:
+            assert mapping["jurisdiction_detector"] == "jurisdiction"
 
     def test_classify_no_detections(self, router, expected_detectors):
         """Test classify with text that should not trigger any detections."""
