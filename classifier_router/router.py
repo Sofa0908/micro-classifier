@@ -2,14 +2,16 @@
 
 from typing import Dict, List, Set
 import logging
+import time
 
 from .factory import DetectorFactory
 from .detector.base import DetectionResult
 from .exceptions import ClassifierError
 from .models import ClassificationResult
+from .logging_cfg import get_logger, ClassifierLoggerMixin
 
 
-class ClassifierRouter:
+class ClassifierRouter(ClassifierLoggerMixin):
     """Main classification router that orchestrates multiple detectors.
 
     The router loads detectors via the DetectorFactory and provides methods
@@ -28,8 +30,30 @@ class ClassifierRouter:
         """
         try:
             self.factory = DetectorFactory(config_path)
-            self.logger = logging.getLogger(__name__)
+
+            # Log successful initialization
+            available_detectors = self.get_available_detectors()
+            self.logger.info(
+                "ClassifierRouter initialized successfully",
+                extra={
+                    "config_path": config_path,
+                    "detector_count": len(available_detectors),
+                    "available_detectors": available_detectors,
+                },
+            )
+
         except Exception as e:
+            # Log initialization failure before re-raising
+            logger = get_logger(__name__)
+            logger.error(
+                "Failed to initialize ClassifierRouter",
+                extra={
+                    "config_path": config_path,
+                    "error_type": e.__class__.__name__,
+                    "error_message": str(e),
+                },
+                exc_info=True,
+            )
             raise ClassifierError(f"Failed to initialize ClassifierRouter: {e}")
 
     def classify(self, text: str) -> ClassificationResult:
@@ -45,12 +69,28 @@ class ClassifierRouter:
             ClassifierError: If text is empty or None
         """
         if not text or not text.strip():
+            self.logger.warning(
+                "Classification attempted with empty text",
+                extra={
+                    "text_provided": text is not None,
+                    "text_length": len(text) if text else 0,
+                },
+            )
             raise ClassifierError("Input text cannot be empty or None")
 
         # Get all available detector names
         available_detectors = [
             config.name for config in self.factory.list_available_detectors()
         ]
+
+        self.logger.info(
+            "Starting classification with all detectors",
+            extra={
+                "text_length": len(text),
+                "detector_count": len(available_detectors),
+                "detectors": available_detectors,
+            },
+        )
 
         return self.classify_with_detectors(text, available_detectors)
 
@@ -69,44 +109,90 @@ class ClassifierRouter:
         Raises:
             ClassifierError: If text is empty, None, or detector_names is empty
         """
+        start_time = time.time()
+
+        # Input validation with logging
         if not text or not text.strip():
+            self.logger.warning(
+                "Classification attempted with empty text",
+                extra={
+                    "text_provided": text is not None,
+                    "text_length": len(text) if text else 0,
+                },
+            )
             raise ClassifierError("Input text cannot be empty or None")
 
         if not detector_names:
+            self.logger.warning("Classification attempted with empty detector list")
             raise ClassifierError("At least one detector name must be specified")
+
+        # Use mixin method for high-level detection start
+        self.log_detection_start(len(text), "classification_batch")
 
         detector_results: Dict[str, DetectionResult] = {}
         successful_detectors: Set[str] = set()
         failed_detectors: Dict[str, str] = {}
 
         for detector_name in detector_names:
+            detector_start_time = time.time()
+
             try:
+                # Use mixin method for individual detector start
+                self.log_detection_start(len(text), detector_name)
+
                 # Create detector instance
                 detector = self.factory.create_detector(detector_name)
 
                 # Run detection
                 result = detector.detect(text)
 
+                detector_time_ms = (time.time() - detector_start_time) * 1000
+
                 # Store results
                 detector_results[detector_name] = result
                 successful_detectors.add(detector_name)
 
-                self.logger.debug(
-                    f"Detector '{detector_name}' completed: detected={result.detected}, value='{result.value}'"
+                # Use mixin method for detection result
+                self.log_detection_result(
+                    detector_name,
+                    result.detected,
+                    result.value or "",
+                    round(detector_time_ms, 2),
                 )
 
             except Exception as e:
+                detector_time_ms = (time.time() - detector_start_time) * 1000
                 error_msg = str(e)
                 failed_detectors[detector_name] = error_msg
 
-                self.logger.warning(f"Detector '{detector_name}' failed: {error_msg}")
+                # Use mixin method for error logging
+                self.log_error(
+                    e,
+                    {
+                        "detector": detector_name,
+                        "processing_time_ms": round(detector_time_ms, 2),
+                        "operation": "detect",
+                    },
+                )
 
-        return ClassificationResult(
+        total_time_ms = (time.time() - start_time) * 1000
+
+        result = ClassificationResult(
             text_length=len(text),
             detector_results=detector_results,
             successful_detectors=successful_detectors,
             failed_detectors=failed_detectors,
         )
+
+        # Use mixin method for final classification result
+        self.log_detection_result(
+            "classification_batch",
+            result.has_detections,
+            f"completed: {len(result.detected_values)} detections",
+            round(total_time_ms, 2),
+        )
+
+        return result
 
     def get_available_detectors(self) -> List[str]:
         """Get list of available detector names.
@@ -114,7 +200,12 @@ class ClassifierRouter:
         Returns:
             List of detector names that can be used for classification
         """
-        return [config.name for config in self.factory.list_available_detectors()]
+        detectors = [config.name for config in self.factory.list_available_detectors()]
+        self.logger.debug(
+            "Retrieved available detectors",
+            extra={"detector_count": len(detectors), "detectors": detectors},
+        )
+        return detectors
 
     def get_detector_info(self, detector_name: str) -> Dict[str, str]:
         """Get information about a specific detector.
@@ -130,10 +221,26 @@ class ClassifierRouter:
         """
         try:
             config = self.factory.get_detector_config(detector_name)
-            return {
+            info = {
                 "name": config.name,
                 "class_path": config.class_path,
                 "description": config.description,
             }
+
+            self.logger.debug(
+                "Retrieved detector info",
+                extra={"detector": detector_name, "class_path": config.class_path},
+            )
+
+            return info
+
         except Exception as e:
+            self.logger.error(
+                "Failed to get detector info",
+                extra={
+                    "detector": detector_name,
+                    "error_type": e.__class__.__name__,
+                    "error_message": str(e),
+                },
+            )
             raise ClassifierError(f"Failed to get detector info: {e}")

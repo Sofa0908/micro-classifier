@@ -193,8 +193,10 @@ class TestClassifierRouter:
         with caplog.at_level("DEBUG"):
             router.classify_with_detectors(sample_text, ["lease_header_detector"])
 
-        # Should have debug log for successful detection
+        # Should have debug log for successful detection using mixin format
         assert any(
-            "lease_header_detector" in record.message and "completed" in record.message
+            "Detection completed" in record.message
+            and hasattr(record, "detector")
+            and record.detector == "lease_header_detector"
             for record in caplog.records
         )
