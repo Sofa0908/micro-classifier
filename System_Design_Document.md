@@ -1,5 +1,8 @@
 # Document Processing System Design
 
+## Assumptions
+- Every document ingested represents exactly one form; no segmentation of multi-document files is required.
+
 ## Data Flow Overview
 
 The system is a fully async pipeline. Messages pass between components via a message queue (e.g. Kafka, SQS). Each component enforces per-stage idempotency with a key `<docId>::<stageName>` in a fast KV store. User‐level dedup is applied at ingestion.

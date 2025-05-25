@@ -1,0 +1,16 @@
+{
+    "detectors": [
+        {
+            "name": "lease_header_detector",
+            "class_path": "classifier_router.core.detector.lease_header.LeaseHeaderDetector",
+            "description": "Detects lease documents by header patterns",
+            "output_type": "docType"
+        },
+        {
+            "name": "jurisdiction_detector",
+            "class_path": "classifier_router.core.detector.jurisdiction.JurisdictionDetector",
+            "description": "Detects jurisdiction codes (CA, MA, NY) in document text",
+            "output_type": "jurisdiction"
+        }
+    ]
+}
