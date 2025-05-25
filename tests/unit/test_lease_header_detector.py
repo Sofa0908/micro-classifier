@@ -1,6 +1,5 @@
 """Unit tests for LeaseHeaderDetector."""
 
-import pytest
 from pathlib import Path
 
 from classifier_router.detector.lease_header import LeaseHeaderDetector
