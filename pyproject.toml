@@ -1,0 +1,13 @@
+[tool.poetry]
+name = "classifier-router"
+version = "0.1.0"
+description = "Document classifier and router microservice"
+authors = ["Vincent <vincent@example.com>"]
+packages = [{include = "classifier_router"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api" 
