@@ -1,6 +1,5 @@
 """Unit tests for JurisdictionDetector."""
 
-import pytest
 from pathlib import Path
 
 from classifier_router.detector.jurisdiction import JurisdictionDetector
