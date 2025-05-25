@@ -8,6 +8,9 @@ packages = [{include = "classifier_router"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api" 
