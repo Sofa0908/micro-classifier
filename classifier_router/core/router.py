@@ -4,11 +4,11 @@ from typing import Dict, List, Set
 import logging
 import time
 
-from .factory import DetectorFactory
-from .detector.base import DetectionResult
-from .exceptions import ClassifierError
-from .models import ClassificationResult
-from .logging_cfg import get_logger, ClassifierLoggerMixin
+from classifier_router.core.factory import DetectorFactory
+from classifier_router.core.detector.base import DetectionResult
+from classifier_router.common.exceptions import ClassifierError
+from classifier_router.core.models import ClassificationResult
+from classifier_router.config.logging_cfg import get_logger, ClassifierLoggerMixin
 
 
 class ClassifierRouter(ClassifierLoggerMixin):

@@ -5,11 +5,15 @@ import json
 import time
 from typing import Dict, Optional
 
-from .router import ClassifierRouter
-from .schemas import TextExtractionMessage, LLMRequestMessage, ClassificationMetadata
-from .settings import settings
-from .logging_cfg import ClassifierLoggerMixin
-from .exceptions import ClassifierError
+from classifier_router.core.router import ClassifierRouter
+from classifier_router.kafka.schemas import (
+    TextExtractionMessage,
+    LLMRequestMessage,
+    ClassificationMetadata,
+)
+from classifier_router.config.settings import settings
+from classifier_router.config.logging_cfg import ClassifierLoggerMixin
+from classifier_router.common.exceptions import ClassifierError
 
 
 class MessageProcessor(ClassifierLoggerMixin):

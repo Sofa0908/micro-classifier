@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from typing import Dict, Set, Optional
 
-from .detector.base import DetectionResult
+from classifier_router.core.detector.base import DetectionResult
 
 
 @dataclass

@@ -4,11 +4,11 @@ import json
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from classifier_router.message_processor import MessageProcessor
-from classifier_router.schemas import TextExtractionMessage, LLMRequestMessage
-from classifier_router.exceptions import ClassifierError
-from classifier_router.models import ClassificationResult
-from classifier_router.detector.base import DetectionResult
+from classifier_router.kafka.processor import MessageProcessor
+from classifier_router.kafka.schemas import TextExtractionMessage, LLMRequestMessage
+from classifier_router.common.exceptions import ClassifierError
+from classifier_router.core.models import ClassificationResult
+from classifier_router.core.detector.base import DetectionResult
 
 
 class TestMessageProcessor:
@@ -44,7 +44,7 @@ class TestMessageProcessor:
     async def test_initialize_success(self, processor):
         """Test successful processor initialization."""
         with patch(
-            "classifier_router.message_processor.ClassifierRouter"
+            "classifier_router.kafka.processor.ClassifierRouter"
         ) as mock_router_class:
             mock_router = MagicMock()
             mock_router.get_output_type_mapping.return_value = {

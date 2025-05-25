@@ -3,7 +3,7 @@
 import pytest
 from pydantic import ValidationError
 
-from classifier_router.schemas import (
+from classifier_router.kafka.schemas import (
     TextExtractionMessage,
     LLMRequestMessage,
     ClassificationMetadata,

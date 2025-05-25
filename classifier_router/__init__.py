@@ -3,20 +3,29 @@
 __version__ = "0.1.0"
 
 # Core classification components
-from .router import ClassifierRouter
-from .models import ClassificationResult
-from .factory import DetectorFactory
+from classifier_router.core.router import ClassifierRouter
+from classifier_router.core.models import ClassificationResult
+from classifier_router.core.factory import DetectorFactory
 
 # Kafka integration components
-from .kafka_service import KafkaService
-from .message_processor import MessageProcessor
-from .schemas import TextExtractionMessage, LLMRequestMessage, ClassificationMetadata
+from classifier_router.kafka.service import KafkaService
+from classifier_router.kafka.processor import MessageProcessor
+from classifier_router.kafka.schemas import (
+    TextExtractionMessage,
+    LLMRequestMessage,
+    ClassificationMetadata,
+)
 
 # Configuration and settings
-from .settings import settings, Settings, KafkaSettings, ApplicationSettings
+from classifier_router.config.settings import (
+    settings,
+    Settings,
+    KafkaSettings,
+    ApplicationSettings,
+)
 
 # Main application entry point
-from .main import main, run
+from classifier_router.main import main, run
 
 __all__ = [
     # Core components

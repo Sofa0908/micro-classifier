@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-from classifier_router.detector.jurisdiction import JurisdictionDetector
-from classifier_router.detector.base import DetectionResult
+from classifier_router.core.detector.jurisdiction import JurisdictionDetector
+from classifier_router.core.detector.base import DetectionResult
 
 
 class TestJurisdictionDetector:
