@@ -11,6 +11,7 @@ class DetectorConfig(BaseModel):
         name: Unique identifier for the detector
         class_path: Full Python import path to the detector class
         description: Human-readable description of what the detector does
+        output_type: Type of output this detector produces (e.g., 'docType', 'jurisdiction')
     """
 
     name: str = Field(..., description="Unique identifier for the detector")
@@ -19,6 +20,10 @@ class DetectorConfig(BaseModel):
     )
     description: str = Field(
         ..., description="Human-readable description of the detector"
+    )
+    output_type: str = Field(
+        ...,
+        description="Type of output this detector produces (e.g., 'docType', 'jurisdiction')",
     )
 
 

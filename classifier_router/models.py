@@ -1,7 +1,7 @@
 """Data models for the classifier router."""
 
 from dataclasses import dataclass
-from typing import Dict, Set
+from typing import Dict, Set, Optional
 
 from .detector.base import DetectionResult
 
@@ -35,3 +35,39 @@ class ClassificationResult:
             for name, result in self.detector_results.items()
             if name in self.successful_detectors and result.detected and result.value
         }
+
+    def get_output_by_type(
+        self, detector_configs: Dict[str, str]
+    ) -> Dict[str, Optional[str]]:
+        """Map detector results by their output types.
+
+        Args:
+            detector_configs: Dict mapping detector names to their output_type
+
+        Returns:
+            Dict mapping output types to detected values (None if not detected)
+
+        Example:
+            detector_configs = {
+                "lease_header_detector": "docType",
+                "jurisdiction_detector": "jurisdiction"
+            }
+
+            Returns: {
+                "docType": "lease",
+                "jurisdiction": "CA"
+            }
+        """
+        output_mapping = {}
+
+        for detector_name, output_type in detector_configs.items():
+            if detector_name in self.successful_detectors:
+                result = self.detector_results.get(detector_name)
+                if result and result.detected and result.value:
+                    output_mapping[output_type] = result.value
+                else:
+                    output_mapping[output_type] = None
+            else:
+                output_mapping[output_type] = None
+
+        return output_mapping
