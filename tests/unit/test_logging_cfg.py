@@ -8,7 +8,7 @@ from unittest.mock import patch, MagicMock
 
 import pytest
 
-from classifier_router.logging_cfg import (
+from classifier_router.config.logging_cfg import (
     setup_logging,
     get_logger,
     ClassifierLoggerMixin,

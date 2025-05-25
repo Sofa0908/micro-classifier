@@ -3,7 +3,7 @@
 import pytest
 from abc import ABC
 
-from classifier_router.detector.base import DetectorStrategy, DetectionResult
+from classifier_router.core.detector.base import DetectorStrategy, DetectionResult
 
 
 class TestDetectionResult:

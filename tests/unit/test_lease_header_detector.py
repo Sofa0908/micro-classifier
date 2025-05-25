@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-from classifier_router.detector.lease_header import LeaseHeaderDetector
-from classifier_router.detector.base import DetectionResult
+from classifier_router.core.detector.lease_header import LeaseHeaderDetector
+from classifier_router.core.detector.base import DetectionResult
 
 
 class TestLeaseHeaderDetector:

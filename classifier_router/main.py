@@ -3,9 +3,9 @@
 import asyncio
 import sys
 
-from .kafka_service import KafkaService
-from .logging_cfg import setup_logging
-from .settings import settings
+from classifier_router.kafka.service import KafkaService
+from classifier_router.config.logging_cfg import setup_logging
+from classifier_router.config.settings import settings
 
 
 async def main() -> None:

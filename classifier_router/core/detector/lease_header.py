@@ -3,7 +3,7 @@
 import re
 from typing import Pattern
 
-from .base import DetectorStrategy, DetectionResult
+from classifier_router.core.detector.base import DetectorStrategy, DetectionResult
 
 
 class LeaseHeaderDetector(DetectorStrategy):

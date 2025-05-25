@@ -5,12 +5,12 @@ import pytest
 from pathlib import Path
 from unittest.mock import patch, mock_open
 
-from classifier_router.factory import DetectorFactory
-from classifier_router.config import DetectorConfig, DetectorRegistryConfig
-from classifier_router.exceptions import ConfigError
-from classifier_router.detector.base import DetectorStrategy
-from classifier_router.detector.lease_header import LeaseHeaderDetector
-from classifier_router.detector.jurisdiction import JurisdictionDetector
+from classifier_router.core.factory import DetectorFactory
+from classifier_router.config.config import DetectorConfig, DetectorRegistryConfig
+from classifier_router.common.exceptions import ConfigError
+from classifier_router.core.detector.base import DetectorStrategy
+from classifier_router.core.detector.lease_header import LeaseHeaderDetector
+from classifier_router.core.detector.jurisdiction import JurisdictionDetector
 
 
 class TestDetectorFactory:
@@ -273,7 +273,7 @@ class TestDetectorFactory:
             "detectors": [
                 {
                     "name": "test_detector",
-                    "class_path": "classifier_router.detector.lease_header.LeaseHeaderDetector",
+                    "class_path": "classifier_router.core.detector.lease_header.LeaseHeaderDetector",
                     "description": "Test detector",
                     "output_type": "docType",
                 }

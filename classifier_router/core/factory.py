@@ -5,9 +5,9 @@ import importlib
 from pathlib import Path
 from typing import Dict, Type, List
 
-from .config import DetectorRegistryConfig, DetectorConfig
-from .detector.base import DetectorStrategy
-from .exceptions import ConfigError
+from classifier_router.config import DetectorRegistryConfig, DetectorConfig
+from classifier_router.core.detector.base import DetectorStrategy
+from classifier_router.common.exceptions import ConfigError
 
 
 class DetectorFactory:

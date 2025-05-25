@@ -3,9 +3,9 @@
 import pytest
 from unittest.mock import patch
 
-from classifier_router.router import ClassifierRouter
-from classifier_router.models import ClassificationResult
-from classifier_router.exceptions import ClassifierError
+from classifier_router.core.router import ClassifierRouter
+from classifier_router.core.models import ClassificationResult
+from classifier_router.common.exceptions import ClassifierError
 
 
 class TestClassifierRouter:
@@ -42,7 +42,7 @@ class TestClassifierRouter:
         router = ClassifierRouter("config/detector_config.json")
         assert router.factory is not None
 
-    @patch("classifier_router.router.DetectorFactory")
+    @patch("classifier_router.core.router.DetectorFactory")
     def test_router_initialization_failure(self, mock_factory):
         """Test router initialization failure."""
         mock_factory.side_effect = Exception("Config error")

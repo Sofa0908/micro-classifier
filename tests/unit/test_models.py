@@ -1,8 +1,8 @@
 """Unit tests for data models."""
 
 import pytest
-from classifier_router.models import ClassificationResult
-from classifier_router.detector.base import DetectionResult
+from classifier_router.core.models import ClassificationResult
+from classifier_router.core.detector.base import DetectionResult
 
 
 class TestClassificationResult:

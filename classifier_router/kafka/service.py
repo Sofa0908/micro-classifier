@@ -8,10 +8,10 @@ from typing import Optional
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 from aiokafka.errors import KafkaError
 
-from .message_processor import MessageProcessor
-from .settings import settings
-from .logging_cfg import ClassifierLoggerMixin
-from .exceptions import ClassifierError
+from classifier_router.kafka.processor import MessageProcessor
+from classifier_router.config.settings import settings
+from classifier_router.config.logging_cfg import ClassifierLoggerMixin
+from classifier_router.common.exceptions import ClassifierError
 
 
 class KafkaService(ClassifierLoggerMixin):
